@@ -1,0 +1,12 @@
+{% extends "hello.html" %}
+{% block title %}{{ super() }}::Environ{% endblock %}
+
+{% block body %}
+    <h2>Request environ</h2>
+	<table>
+		<tr><th>Name</th><th>Value</th></tr>
+	{% for key, value in environ.items()|sort %}
+		<tr><td>{{ key|e }}</td><td>{{ value|e }}</td></tr>
+	{% endfor %}
+	</table>
+{% endblock %}

@@ -5,7 +5,7 @@ if sys.version_info[:2] < (3, 5):
     raise NotImplementedError("Required python version 3.5 or greater")
 
 setup(**{
-    'name': 'Squall.Gateway',
+    'name': 'squall.gateway',
     'version': '0.1.dev0',
     'namespace_packages': ['squall'],
     'packages': ['squall.gateway'],
