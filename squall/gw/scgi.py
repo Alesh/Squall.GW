@@ -2,7 +2,7 @@
 """
 from squall.utils import timeout_gen
 from squall.network import SocketStream, TCPServer
-from squall.gateway.base import Gateway, StartResponse, logger
+from squall.gw.base import Gateway, StartResponse, logger
 
 
 class SCGIGateway(Gateway, TCPServer):

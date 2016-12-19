@@ -10,17 +10,28 @@ from squall.iostream import IOStream
 logger = logging.getLogger('squall.gateway')
 
 
+class Status(str):
+    """ HTTP respanse status
+    """
+    def __new__(cls, code, reason=None):
+        if reason is None:
+            reason = BRH.responses.get(code, ('', ''))[0] or 'Undefined'
+        self = super(Status, cls).__new__(cls, '{} {}'.format(code, reason))
+        self._code = code
+        return self
+
+    @property
+    def code(self):
+        """ Response status code"""
+        return self._code
+
+
 class Response(object):
     """ Base class of HTTP responses and errors
     """
     def __init__(self, status_code, headers=[]):
         self.set_status(status_code)
         self._headers = headers
-
-    @property
-    def code(self):
-        """ Response status code"""
-        return self._code
 
     @property
     def status(self):
@@ -37,8 +48,7 @@ class Response(object):
         """
         if reason is None:
             reason = BRH.responses.get(code, ('', ''))[0] or 'Error'
-        self._status = '{} {}'.format(code, reason)
-        self._code = code
+        self._status = Status(code, reason)
 
     def add_header(self, name, value):
         """ Adds response header.
@@ -169,7 +179,7 @@ class Gateway(object):
                     exc = Error(500, str(exc))
             exc_info = sys.exc_info()
             start_response(exc.status, exc.headers, exc_info)
-            if self.debug and exc.code == 500:
+            if self.debug and exc.status.code == 500:
                 exc.set_header('Content-Type', 'text/plain; charset=UTF-8')
                 body = '{}\r\n{}'.format(exc,
                                          ''.join(format_exception(*exc_info)))
